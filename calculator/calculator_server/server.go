@@ -6,6 +6,7 @@ import (
 	"groc-go/calculator/calculatorpb"
 	"log"
 	"net"
+	"time"
 
 	"google.golang.org/grpc"
 )
@@ -24,6 +25,30 @@ func (*server) Calculate(ctx context.Context, req *calculatorpb.CalculatorReques
 	}
 
 	return res, nil
+}
+
+// Prime number decomposition
+func (*server) PrimeNumberDecomposition(req *calculatorpb.PrimeNumberDecompositionRequest, stream calculatorpb.CalculatorService_PrimeNumberDecompositionServer) error {
+	fmt.Printf("PrimeNumberDecomposition was invoked with %v", req)
+
+	n := req.GetNumber().GetX()
+
+	var k int64 = 2
+	for n > 1 {
+		if n%k == 0 {
+			result := k
+			res := &calculatorpb.PrimeNumberDecompositionResponse{
+				Result: result,
+			}
+
+			stream.Send(res)
+			time.Sleep(1000 * time.Millisecond)
+			n = n / k
+		} else {
+			k = k + 1
+		}
+	}
+	return nil
 }
 
 func main() {

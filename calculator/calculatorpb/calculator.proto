@@ -8,10 +8,21 @@ message Numbers {
   int64 y = 2;
 }
 
+message Number { int64 x = 1; }
+
 message CalculatorRequest { Numbers numbers = 1; }
 
 message CalculatorResponse { int64 result = 1; }
 
+message PrimeNumberDecompositionRequest { Number number = 1; }
+
+message PrimeNumberDecompositionResponse { int64 result = 1; }
+
 service CalculatorService {
+  // Unary
   rpc Calculate(CalculatorRequest) returns (CalculatorResponse) {};
+
+  // Server Streaming
+  rpc PrimeNumberDecomposition(PrimeNumberDecompositionRequest)
+      returns (stream PrimeNumberDecompositionResponse) {};
 }
